@@ -1,6 +1,32 @@
 /******************************************************
  * Define an Objective-c compatible environment
- *
+ * 
+ *  BSD 2-Clause License
+ * 
+ * Copyright (c) 2021 bruce davidson <darkoverlordofdata@gmail.com>.
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
  */
 #ifndef VANILLA_H
 #define VANILLA_H
@@ -60,6 +86,8 @@ int NSApplicationMain(int argc, char *argv[]);
 void NSLog(id format, ...);
 
 SEL allocSel;
+SEL applicationDidFinishLaunchingSel;
+SEL applicationWillFinishLaunchingSel;
 SEL applicationShouldTerminateSel;
 SEL autoreleaseSel;
 SEL buttonNumberSel;
@@ -118,15 +146,20 @@ Protocol* NSApplicationDelegateProtocol;
 id NSApp;
 
 
-	//[NSApp setDelegate:delegate];
-	// ((void (*)(id, SEL, id))objc_msgSend)(NSApp, setDelegateSel, delegate);
-
-	// ((void (*)(id, SEL))objc_msgSend)(delegate, autoreleaseSel);
-
-	// ((void (*)(id, SEL))objc_msgSend)(NSApp, finishLaunchingSel);
+/**
+ * Generic Function Methods
+ *
+ */
+static inline void Run(id object) {
+	((void (*)(id, SEL))objc_msgSend)(object, runSel);
+}
 
 static inline void FinishLaunching(id object) {
 	((void (*)(id, SEL))objc_msgSend)(object, finishLaunchingSel);
+}
+
+static inline void ApplicationDidFinishLaunching(id object) {
+	((void (*)(id, SEL))objc_msgSend)(object, applicationDidFinishLaunchingSel);
 }
 
 static inline void AutoRelease(id object) {
@@ -224,6 +257,8 @@ static void VanillaInit()
 {
     allocSel                                = sel_registerName("alloc");
 	applicationShouldTerminateSel           = sel_registerName("applicationShouldTerminate:");
+	applicationDidFinishLaunchingSel       	= sel_registerName("applicationDidFinishLaunching");
+	applicationWillFinishLaunchingSel       = sel_registerName("applicationWillFinishLaunching:");
 	autoreleaseSel                          = sel_registerName("autorelease");
 	buttonNumberSel                         = sel_registerName("buttonNumber");
 	centerSel 						        = sel_registerName("center");

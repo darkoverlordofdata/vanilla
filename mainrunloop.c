@@ -93,7 +93,7 @@ int main (int argc, char *argv[])
 
 	NSLog($("this is what I'm talking about!"));
 	Drain(pool);
-    NSLog($("Bye"));
+    if  (DBG) NSLog($("Bye"));
     return 0;
 }
 
